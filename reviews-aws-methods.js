@@ -13,35 +13,12 @@ const getReviews = async () => {
 const addReview = async (review) => {
   const params = {
     TableName: TABLE_NAME,
-    // Item: {
-    //   reviewId:
-    // },
   };
   return await dynamoClient.put(params).promise();
 };
 
-// works!!!
-// const addLikeToReview = async (reviewObj) => {
-//   console.log('addLikeToReview called: ', reviewObj);
-//   const params = {
-//     TableName: 'reviews',
-//     Key: {
-//       reviewId: 'cd161ec0-5ea0-11ec-bb77-b3f4a5915d1e',
-//     },
-//     UpdateExpression: 'set #dislikeTings = list_append(#dislikeTings, :vals)',
-//     ExpressionAttributeNames: {
-//       '#dislikeTings': 'dislikes',
-//     },
-//     ExpressionAttributeValues: {
-//       ':vals': ['user2', 'user3'],
-//     },
-//     ReturnValues: 'UPDATED_NEW',
-//   };
-//   return await dynamoClient.update(params).promise();
-// };
-
 // #util
-const getLikeById = async (reviewId, typeOfLike) => {
+const getLikeById = async (reviewId, typeOfLike, userId) => {
   const params = {
     TableName: 'reviews',
     Key: {
@@ -51,17 +28,18 @@ const getLikeById = async (reviewId, typeOfLike) => {
     },
     AttributesToGet: [typeOfLike],
   };
-  return await dynamoDB.getItem(params).promise();
+  const { Item: items } = await dynamoDB.getItem(params).promise();
+  return items[typeOfLike].L.findIndex((e) => e.S === userId);
 };
 
 const addLikeToReview = async (reviewObj) => {
   let removeDislikeStatement;
   if (reviewObj.prevLike === 'dislike') {
-    const dislikeContent = await getLikeById(reviewObj.reviewId, 'dislikes');
-    const dislikeIndex = dislikeContent.Item.dislikes.L.findIndex(
-      (e) => e.S === reviewObj.userId
+    const dislikeIndex = await getLikeById(
+      reviewObj.reviewId,
+      'dislikes',
+      reviewObj.userId
     );
-    console.log('dislikeIndex: ', dislikeIndex);
     removeDislikeStatement = ` remove dislikes[${dislikeIndex}]`;
   }
   const params = {

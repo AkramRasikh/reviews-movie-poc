@@ -13,7 +13,6 @@ const {
 app.use(bodyParser.json());
 
 app.get('/', async function (_, res) {
-  console.log('hitting reviews GET');
   try {
     const { Items: allReviews } = await getReviews();
     res.status(200).send(allReviews);
@@ -23,11 +22,7 @@ app.get('/', async function (_, res) {
 });
 
 app.post('/add-review', async function (req, res) {
-  // assume validation
   const reviewReq = req.body;
-  // reviewId = film
-  // dislikes = push to array
-  // likes = push to array
   try {
     if (req.body.currentLike === 'like') {
       await addLikeToReview(reviewReq);
