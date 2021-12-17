@@ -7,10 +7,10 @@ const generateReviews = () => ({
         S: uuid.v1(),
       },
       likes: {
-        SS: [uuid.v1()],
+        L: [{ S: uuid.v1() }],
       },
       dislikes: {
-        SS: [uuid.v1()],
+        L: [{ S: uuid.v1() }],
       },
     },
   },

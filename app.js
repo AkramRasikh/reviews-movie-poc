@@ -2,7 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const { getReviews, addLikeToReview } = require('./reviews-aws-methods');
+const {
+  getReviews,
+  addLikeToReview,
+  addDislikeToReview,
+  removeLikeFromReview,
+  removeDislikeFromReview,
+} = require('./reviews-aws-methods');
 
 app.use(bodyParser.json());
 
@@ -18,13 +24,21 @@ app.get('/', async function (_, res) {
 
 app.post('/add-review', async function (req, res) {
   // assume validation
-  const amountReq = req.body;
+  const reviewReq = req.body;
   // reviewId = film
   // dislikes = push to array
   // likes = push to array
-  console.log('amountReq: ', amountReq);
   try {
-    await addLikeToReview(amountReq);
+    if (req.body.currentLike === 'like') {
+      await addLikeToReview(reviewReq);
+    } else if (req.body.currentLike === 'dislike') {
+      await addDislikeToReview(reviewReq);
+    } else if (req.body.prevLike === 'dislike') {
+      await removeDislikeFromReview(reviewReq);
+    } else {
+      await removeLikeFromReview(reviewReq);
+    }
+
     res.status(200).send('review sent');
   } catch (error) {
     console.log('fail');

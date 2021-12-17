@@ -3,7 +3,7 @@ const { generateReviews } = require('./generate-reviews');
 
 let reviewsArr = [];
 
-for (let i = 0; i < 25; i++) {
+for (let i = 0; i < 2; i++) {
   const reviewItem = generateReviews();
   reviewsArr.push(reviewItem);
 }

@@ -1,4 +1,4 @@
-const { dynamoClient } = require('./dynamo');
+const { dynamoDB } = require('./dynamo');
 
 const params = {
   TableName: `reviews`,
@@ -9,4 +9,4 @@ const params = {
 
 console.log('creating tables');
 
-dynamoClient.createTable(params, console.log);
+dynamoDB.createTable(params, console.log);
