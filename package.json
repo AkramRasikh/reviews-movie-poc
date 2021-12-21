@@ -6,8 +6,10 @@
   "scripts": {
     "start": "nodemon app.js",
     "create-table": "node aws/create-table.js",
+    "create-integration-db": "node setup-integration.js",
     "put-item": "node aws/put-item.js",
-    "test": "jest"
+    "test": "jest --config=jest.config.js",
+    "test:i": "npm run create-integration-db && jest --config=jest.integration.config.js --forceExit --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",

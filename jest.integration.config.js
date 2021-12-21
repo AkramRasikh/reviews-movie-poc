@@ -95,8 +95,6 @@ module.exports = {
   // A preset that is used as a base for Jest's configuration
   // preset: undefined,
 
-  preset: '@shelf/jest-dynamodb',
-
   // Run tests from one or more projects
   // projects: undefined,
 
@@ -127,10 +125,10 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: undefined,
+  // setupFiles: ['./setup-integration.js'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
+  setupFilesAfterEnv: ['./teardown-integration.js'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -154,7 +152,7 @@ module.exports = {
   // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  testPathIgnorePatterns: ['/integration/'],
+  testPathIgnorePatterns: ['/unit/'],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],

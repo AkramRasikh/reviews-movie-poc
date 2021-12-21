@@ -1,12 +1,14 @@
 const AWS = require('aws-sdk');
-const docClient = new AWS.DynamoDB.DocumentClient();
+// const docClient = new AWS.DynamoDB.DocumentClient();
 const { dynamoClient, dynamoDB, TABLE_NAME } = require('./aws/dynamo');
 
 const getReviews = async () => {
   const params = {
     TableName: TABLE_NAME,
   };
+  console.log('hitting getReviews');
   const reviews = await dynamoClient.scan(params).promise();
+  console.log('reviews: ', reviews);
   return reviews;
 };
 
@@ -33,6 +35,7 @@ const getLikeById = async (reviewId, typeOfLike, userId) => {
 };
 
 const addLikeToReview = async (reviewObj) => {
+  console.log('function init addLikeToReview: ', reviewObj);
   let removeDislikeStatement;
   if (reviewObj.prevLike === 'dislike') {
     const dislikeIndex = await getLikeById(
@@ -58,6 +61,7 @@ const addLikeToReview = async (reviewObj) => {
     },
     ReturnValues: 'UPDATED_NEW',
   };
+  console.log('about to update via addLikeToReview');
   return await dynamoClient.update(params).promise();
 };
 
@@ -121,40 +125,3 @@ module.exports = {
   removeLikeFromReview,
   removeDislikeFromReview,
 };
-
-// const addLikeToReview = async (reviewObj) => {
-//   console.log('addLikeToReview called: ', reviewObj);
-//   const params = {
-//     TableName: 'reviews',
-//     Key: {
-//       reviewId: reviewObj.reviewId,
-//     },
-//     UpdateExpression: 'ADD #likes :likeId',
-//     ExpressionAttributeNames: {
-//       '#likes': 'likes',
-//     },
-//     ExpressionAttributeValues: {
-//       ':likeId': docClient.createSet(reviewObj.userId),
-//     },
-//     ReturnValues: 'UPDATED_NEW',
-//   };
-//   return await dynamoClient.update(params).promise();
-// };
-
-// const addDislikeToReview = async (reviewObj) => {
-//   const params = {
-//     TableName: 'reviews',
-//     Key: {
-//       reviewId: reviewObj.reviewId,
-//     },
-//     UpdateExpression: `SET #c list_append(#c, :dislikeId)`,
-//     ExpressionAttributeNames: {
-//       '#c': 'dislikes',
-//     },
-//     ExpressionAttributeValues: {
-//       ':vals': ['user2'],
-//     },
-//     ReturnValues: 'UPDATED_NEW',
-//   };
-//   return await docClient.update(params).promise();
-// };

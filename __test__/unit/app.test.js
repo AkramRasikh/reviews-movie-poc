@@ -1,7 +1,8 @@
 const request = require('supertest');
-const { app: mockApp } = require('../app');
-const reviewMethods = require('../reviews-aws-methods');
-jest.mock('../reviews-aws-methods');
+const { app: mockApp } = require('../../app');
+// const { mockDdb } = require('../../dynamo-mock');
+const reviewMethods = require('../../reviews-aws-methods');
+jest.mock('../../reviews-aws-methods');
 
 beforeEach(() => {
   jest.clearAllMocks();

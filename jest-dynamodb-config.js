@@ -3,11 +3,7 @@ module.exports = {
     {
       TableName: `reviews`,
       KeySchema: [{ AttributeName: 'reviewId', KeyType: 'HASH' }],
-      AttributeDefinitions: [
-        { AttributeName: 'reviewId', AttributeType: 'S' },
-        { AttributeName: 'likes', AttributeType: 'L' },
-        { AttributeName: 'dislikes', AttributeType: 'L' },
-      ],
+      AttributeDefinitions: [{ AttributeName: 'reviewId', AttributeType: 'S' }],
       ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
     },
   ],
