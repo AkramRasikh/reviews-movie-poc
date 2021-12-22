@@ -1,4 +1,7 @@
 name: Node.js CI
+env:
+  HOST: 8003
+  HOST_TEST: 3006
 
 on: [push]
 
