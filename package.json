@@ -8,13 +8,12 @@
     "create-table": "node aws/create-table.js",
     "create-integration-db": "node setup-integration.js",
     "put-item": "node aws/put-item.js",
-    "test": "jest --config=jest.config.js",
+    "test": "jest --config=jest.config.js  --forceExit --detectOpenHandles",
     "test:i": "npm run create-integration-db && jest --config=jest.integration.config.js --forceExit --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@shelf/jest-dynamodb": "^2.1.0",
     "aws-sdk": "^2.1033.0",
     "axios": "^0.24.0",
     "body-parser": "^1.19.0",
@@ -26,6 +25,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@shelf/jest-dynamodb": "^2.2.3",
     "eslint": "^8.3.0",
     "supertest": "^6.1.6"
   }
