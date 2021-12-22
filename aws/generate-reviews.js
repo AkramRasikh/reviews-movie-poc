@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const { dynamoDB } = require('./dynamo');
 
 const generateReviews = () => ({
   PutRequest: {
@@ -16,4 +17,25 @@ const generateReviews = () => ({
   },
 });
 
-module.exports = { generateReviews };
+let reviewsArr = [];
+
+const params = {
+  RequestItems: {
+    reviews: reviewsArr,
+  },
+};
+
+for (let i = 0; i < 2; i++) {
+  const reviewItem = generateReviews();
+  reviewsArr.push(reviewItem);
+}
+
+const generateDynamodbReviews = async () => {
+  try {
+    await dynamoDB.batchWriteItem(params).promise();
+  } catch (error) {
+    console.log('error generating reviews: ', error);
+  }
+};
+
+module.exports = { generateReviews, generateDynamodbReviews };

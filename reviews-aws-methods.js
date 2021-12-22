@@ -1,4 +1,3 @@
-const AWS = require('aws-sdk');
 // const docClient = new AWS.DynamoDB.DocumentClient();
 const { dynamoClient, dynamoDB, TABLE_NAME } = require('./aws/dynamo');
 
@@ -67,12 +66,24 @@ const addLikeToReview = async (reviewObj) => {
 
 const addDislikeToReview = async (reviewObj) => {
   // check if liked
+  let removeLikeStatement;
+  if (reviewObj.prevLike === 'like') {
+    const likeIndex = await getLikeById(
+      reviewObj.reviewId,
+      'likes',
+      reviewObj.userId
+    );
+    removeLikeStatement = ` remove likes[${likeIndex}]`;
+  }
+
   const params = {
     TableName: 'reviews',
     Key: {
       reviewId: reviewObj.reviewId,
     },
-    UpdateExpression: 'set #dislikeTings = list_append(#dislikeTings, :vals)',
+    UpdateExpression:
+      'set #dislikeTings = list_append(#dislikeTings, :vals)' +
+      removeLikeStatement,
     ExpressionAttributeNames: {
       '#dislikeTings': 'dislikes',
     },

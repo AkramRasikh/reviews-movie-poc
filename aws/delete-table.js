@@ -7,7 +7,6 @@ const params = {
 const executeDeleteTables = async () => {
   try {
     await dynamoDB.deleteTable(params).promise();
-    console.log('table deleted!');
   } catch (error) {
     console.error('Unable to delete table: ', error);
   }

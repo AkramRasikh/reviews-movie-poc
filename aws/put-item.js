@@ -1,20 +1,29 @@
-// const uuid = require('uuid');
-// const { dynamoClient } = require('./dynamo');
+const { dynamoDB } = require('./dynamo');
 
-// const params = {
-//   Item: {
-//     paymentId: {
-//       S: uuid.v1(),
-//     },
-//     amount: {
-//       S: (Math.floor(Math.random() * 100) + 1).toString(),
-//     },
-//   },
-//   ReturnConsumedCapacity: 'TOTAL',
-//   TableName: 'payments',
-// };
+const createReview = async ({ reviewId, dislikes, likes }) => {
+  const params = {
+    Item: {
+      reviewId: {
+        S: reviewId,
+      },
+      dislikes: {
+        L: dislikes,
+      },
+      likes: {
+        L: likes,
+      },
+    },
+    ReturnConsumedCapacity: 'TOTAL',
+    TableName: 'reviews',
+  };
 
-// dynamoClient.putItem(params, function (err, data) {
-//   if (err) console.log('err', err, err.stack);
-//   else console.log('success!', data); // successful response
-// });
+  try {
+    await dynamoDB.putItem(params).promise();
+  } catch (error) {
+    console.log('err adding Item to dynamoDB: ', error);
+  }
+};
+
+module.exports = {
+  createReview,
+};

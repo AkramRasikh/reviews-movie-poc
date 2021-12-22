@@ -1,5 +1,5 @@
 const request = require('supertest');
-const { app: mockApp } = require('../../app');
+const { server: mockApp } = require('../../app');
 // const { mockDdb } = require('../../dynamo-mock');
 const reviewMethods = require('../../reviews-aws-methods');
 jest.mock('../../reviews-aws-methods');

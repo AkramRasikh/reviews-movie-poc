@@ -17,19 +17,6 @@ const createTables = async () => {
   }
 };
 
-// const getDynamoTables = async () => {
-//   try {
-//     const { TableNames } = await dynamoDB
-//       .listTables({ ExclusiveStartTableName })
-//       .promise();
-//     if (TableNames.length === 0) {
-//       await createTables();
-//     }
-//   } catch (error) {
-//     console.log('error listing/creating tables: ', error);
-//   }
-// };
-
 module.exports = {
   // getDynamoTables,
   createTables,

@@ -16,6 +16,7 @@ app.get('/', async function (_, res) {
   console.log('hitting GET');
   try {
     const { Items: allReviews } = await getReviews();
+    console.log('allReviews: ', allReviews);
     res.status(200).send(allReviews);
   } catch (error) {
     res.status(400).send('err');
@@ -26,7 +27,7 @@ app.post('/add-review', async function (req, res) {
   const reviewReq = req.body;
   try {
     if (req.body.currentLike === 'like') {
-      console.log('#1: ', reviewReq);
+      console.log('#1: ');
       await addLikeToReview(reviewReq);
     } else if (req.body.currentLike === 'dislike') {
       console.log('#2');
@@ -47,10 +48,11 @@ app.post('/add-review', async function (req, res) {
 
 const port =
   process.env.NODE_ENV === 'test' ? process.env.HOST_TEST : process.env.HOST;
-app.listen(port);
+
+let server = app.listen(port);
 
 console.log('running on port ', port);
 
 module.exports = {
-  app,
+  server,
 };
