@@ -19,7 +19,6 @@ jobs:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           run: docker login -u DOCKER_USER $ -p $DOCKER_PASSWORD
-      - name: dynamodb isntance
         run: docker run -p 8000:8000 amazon/dynamodb-local
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
