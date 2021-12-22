@@ -15,7 +15,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  console.log('after in like test');
   integrationServer.close();
   await executeDeleteTables();
 });
