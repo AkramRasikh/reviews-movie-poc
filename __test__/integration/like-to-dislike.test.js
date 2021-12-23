@@ -26,7 +26,7 @@ const dislikeBody = {
   currentLike: 'dislike',
 };
 
-test('should remove a like from reviews and add to dislikes', async () => {
+xtest('should remove a like from reviews and add to dislikes', async () => {
   await request(integrationServer)
     .post('/add-review')
     .send(dislikeBody)
