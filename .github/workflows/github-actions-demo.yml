@@ -2,6 +2,8 @@ name: Node.js CI
 env:
   HOST: 8003
   HOST_TEST: 3006
+  DOCKER_USER: '${{ secrets.DOCKER_USER }}'
+  DOCKER_PASSWORD: '${{ secrets.DOCKER_PASSWORD }}'
 
 on: [push]
 
@@ -11,10 +13,7 @@ jobs:
 
     steps:
       - name: docker login
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: docker login -u ${{ secrets.DOCKER_USER }} $ -p ${{ secrets.DOCKER_PASSWORD }} && docker run -p 8000:8000 amazon/dynamodb-local
+        run: docker login -u DOCKER_USER $ -p DOCKER_PASSWORD && docker run -p 8000:8000 amazon/dynamodb-local
       - uses: actions/checkout@v2
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
