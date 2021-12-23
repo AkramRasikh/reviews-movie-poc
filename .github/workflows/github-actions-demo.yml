@@ -4,6 +4,8 @@ env:
   HOST_TEST: 3006
   DOCKER_USER: '${{ secrets.DOCKER_USER }}'
   DOCKER_PASSWORD: '${{ secrets.DOCKER_PASSWORD }}'
+  AWS_ACCOUNT_ID: '${{ secrets.AWS_ACCOUNT_ID }}'
+  AWS_REGION: '${{ secrets.AWS_REGION }}'
 
 on: [push]
 
@@ -13,7 +15,7 @@ jobs:
 
     steps:
       - name: docker login
-        run: docker login -u DOCKER_USER --password-stdin DOCKER_PASSWORD && docker run -p 8000:8000 amazon/dynamodb-local
+        run: aws ecr get-login-password --region AWS_REGION | docker login --username AWS --password-stdin AWS_ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com | docker run -p 8000:8000 amazon/dynamodb-local
       - uses: actions/checkout@v2
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
