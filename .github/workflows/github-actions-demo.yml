@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: docker login
-        run: aws ecr get-login-password --region AWS_REGION && docker login --username AWS --password-stdin AWS_ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com && docker run -p 8000:8000 amazon/dynamodb-local
+        run: aws ecr get-login-password --region=AWS_REGION && docker login --username AWS --password-stdin AWS_ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com && docker run -p 8000:8000 amazon/dynamodb-local
       - uses: actions/checkout@v2
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
