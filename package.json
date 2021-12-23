@@ -9,7 +9,7 @@
     "create-integration-db": "node setup-integration.js",
     "put-item": "node aws/put-item.js",
     "test": "jest --config=jest.config.js  --forceExit --detectOpenHandles",
-    "test:i": "npm run create-integration-db && jest --config=jest.integration.config.js --forceExit --detectOpenHandles"
+    "test:i": "jest --config=jest.integration.config.js --forceExit --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",
