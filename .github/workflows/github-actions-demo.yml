@@ -24,7 +24,6 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
       - name: docker login
         run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
-      - run: docker run -p 8000:8000 amazon/dynamodb-local
       - uses: actions/checkout@v2
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
@@ -32,5 +31,6 @@ jobs:
           node-version: 14.x
       - name: Install dependencies
         run: npm ci
+      - run: docker run -p 8000:8000 amazon/dynamodb-local &
       - run: npm test
       - run: npm run test:i
