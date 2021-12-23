@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: docker login
-        run: docker login -u DOCKER_USER $ -p DOCKER_PASSWORD && docker run -p 8000:8000 amazon/dynamodb-local
+        run: docker login -u DOCKER_USER --password-stdin DOCKER_PASSWORD && docker run -p 8000:8000 amazon/dynamodb-local
       - uses: actions/checkout@v2
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
