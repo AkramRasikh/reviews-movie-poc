@@ -22,6 +22,7 @@ jobs:
           aws-region: eu-west-1
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - run: echo AWS_REGION
       - name: docker login
         run: aws ecr get-login-password --region eu-west-1
       - run: docker login --username AWS --password-stdin AWS_ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com
