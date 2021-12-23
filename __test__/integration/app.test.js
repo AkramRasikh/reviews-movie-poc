@@ -5,16 +5,16 @@ const { executeDeleteTables } = require('../../aws/delete-table');
 const { generateDynamodbReviews } = require('../../aws/generate-reviews');
 
 beforeAll(async () => {
-  // await createTables();
-  // await generateDynamodbReviews();
+  await createTables();
+  await generateDynamodbReviews();
 });
 
 afterAll(async () => {
-  // integrationServer.close();
-  // await executeDeleteTables();
+  integrationServer.close();
+  await executeDeleteTables();
 });
 
-xtest('should return reviews', async () => {
+test('should return reviews', async () => {
   const response = await request(integrationServer).get('/').expect(200);
   expect(response.body.length).toBe(2);
   expect(response.body[0].reviewId).toBeDefined();

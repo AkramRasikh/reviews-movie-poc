@@ -4,9 +4,20 @@ const params = {
   TableName: 'reviews',
 };
 
+// const checkIfTableExists = async () => {
+//   try {
+// checkIfTableExists()
+//   } catch (error) {
+//   }
+// }
+
 const executeDeleteTables = async () => {
   try {
-    await dynamoDB.deleteTable(params).promise();
+    const doesExist = await dynamoDB.describeTable(params).promise();
+    console.log('doesExist: ', doesExist);
+    if (doesExist) {
+      await dynamoDB.deleteTable(params).promise();
+    }
   } catch (error) {
     console.error('Unable to delete table: ', error);
   }
