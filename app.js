@@ -49,7 +49,7 @@ app.post('/add-review', async function (req, res) {
 const port =
   process.env.NODE_ENV === 'test' ? process.env.HOST_TEST : process.env.HOST;
 
-let server = app.listen(port);
+const server = app.listen(port);
 
 console.log('running on port ', port);
 

@@ -5,11 +5,13 @@ const { executeDeleteTables } = require('../../aws/delete-table');
 const { generateDynamodbReviews } = require('../../aws/generate-reviews');
 
 beforeAll(async () => {
+  console.log('beforeAll');
   await createTables();
   await generateDynamodbReviews();
 });
 
 afterAll(async () => {
+  console.log('afterAll');
   integrationServer.close();
   await executeDeleteTables();
 });

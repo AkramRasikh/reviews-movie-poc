@@ -31,7 +31,6 @@ test('should remove a like from reviews and add to dislikes', async () => {
     .post('/add-review')
     .send(dislikeBody)
     .expect(200);
-
   const params = {
     TableName: 'reviews',
     Key: {
