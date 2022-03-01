@@ -115,18 +115,17 @@ const removeLikeFromReview = async (reviewObj) => {
 };
 
 const removeDislikeFromReview = async (reviewObj) => {
-  const likeContent = await getLikeById(reviewObj.reviewId, 'dislikes');
-  const likeIndex = likeContent.Item.lislikes.L.findIndex(
-    // lislikes?
-    (e) => e.S === reviewObj.userId
+  const dislikeIndex = await getLikeById(
+    reviewObj.reviewId,
+    'dislikes',
+    reviewObj.userId
   );
-
   const params = {
     TableName: 'reviews',
     Key: {
       reviewId: reviewObj.reviewId,
     },
-    UpdateExpression: `remove dislikes[${likeIndex}]`,
+    UpdateExpression: `remove dislikes[${dislikeIndex}]`,
     ReturnValues: 'UPDATED_NEW',
   };
   return await dynamoClient.update(params).promise();
