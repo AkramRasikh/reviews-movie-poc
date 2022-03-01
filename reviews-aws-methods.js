@@ -30,7 +30,8 @@ const getLikeById = async (reviewId, typeOfLike, userId) => {
     AttributesToGet: [typeOfLike],
   };
   const { Item: items } = await dynamoDB.getItem(params).promise();
-  return items[typeOfLike].L.findIndex((e) => e.S === userId);
+  const likeItemsIndex = items[typeOfLike].L.findIndex((e) => e.S === userId);
+  return likeItemsIndex;
 };
 
 const addLikeToReview = async (reviewObj) => {
@@ -96,10 +97,12 @@ const addDislikeToReview = async (reviewObj) => {
 };
 
 const removeLikeFromReview = async (reviewObj) => {
-  const dislikeContent = await getLikeById(reviewObj.reviewId, 'likes');
-  const likeIndex = likeContent.Item.dislikes.L.findIndex(
-    (e) => e.S === reviewObj.userId
+  const likeIndex = await getLikeById(
+    reviewObj.reviewId,
+    'likes',
+    reviewObj.userId
   );
+  console.log('likeIndex: ', likeIndex);
   const params = {
     TableName: 'reviews',
     Key: {
@@ -114,6 +117,7 @@ const removeLikeFromReview = async (reviewObj) => {
 const removeDislikeFromReview = async (reviewObj) => {
   const likeContent = await getLikeById(reviewObj.reviewId, 'dislikes');
   const likeIndex = likeContent.Item.lislikes.L.findIndex(
+    // lislikes?
     (e) => e.S === reviewObj.userId
   );
 
