@@ -1,14 +1,13 @@
 module.exports = {
+  extends: ['eslint:recommended', 'plugin:jest/recommended'],
   env: {
     browser: false,
     commonjs: true,
+    node: true,
     es2021: true,
+    'jest/globals': true,
   },
-  extends: 'eslint:recommended',
   parserOptions: {
     ecmaVersion: 13,
-  },
-  rules: {
-    'jest/globals': true,
   },
 };

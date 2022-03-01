@@ -8,8 +8,9 @@
     "create-table": "node aws/create-table.js",
     "create-integration-db": "node setup-integration.js",
     "put-item": "node aws/put-item.js",
-    "test": "jest --config=jest.config.js  --forceExit --detectOpenHandles",
-    "test:i": "jest --config=jest.integration.config.js --forceExit --detectOpenHandles"
+    "test": "jest --config=jest.config.js --detectOpenHandles",
+    "test:i": "jest --config=jest.integration.config.js --forceExit --detectOpenHandles",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@shelf/jest-dynamodb": "^2.2.3",
     "eslint": "^8.3.0",
+    "eslint-plugin-jest": "^25.3.0",
     "supertest": "^6.1.6"
   }
 }

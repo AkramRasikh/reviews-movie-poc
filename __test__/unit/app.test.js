@@ -7,6 +7,11 @@ jest.mock('../../reviews-aws-methods');
 beforeEach(() => {
   jest.clearAllMocks();
 });
+
+afterAll(() => {
+  mockApp.close();
+});
+
 const likeBody = {
   reviewId: '1',
   userId: 'user1',
@@ -35,7 +40,7 @@ const removeDislikeBody = {
   currentLike: '',
 };
 
-it('responds with reviews', async () => {
+test('responds with reviews', async () => {
   reviewMethods.getReviews.mockImplementation(() => ({
     Items: [
       { reviewId: 1, likes: ['user1', 'user2'], dislikes: ['user3', 'user4'] },
@@ -50,20 +55,20 @@ it('responds with reviews', async () => {
 });
 
 describe('like btn functionality', () => {
-  it('adds like and removes dislike', async () => {
+  test('adds like and removes dislike', async () => {
     await request(mockApp).post('/add-review').send(likeBody).expect(200);
     expect(reviewMethods.addLikeToReview).toBeCalled();
   });
 
-  it('adds dislike and removes like', async () => {
+  test('adds dislike and removes like', async () => {
     await request(mockApp).post('/add-review').send(dislikeBody).expect(200);
     expect(reviewMethods.addDislikeToReview).toBeCalled();
   });
-  it('adds nothing and removes dislikelike', async () => {
+  test('adds nothing and removes dislikelike', async () => {
     await request(mockApp).post('/add-review').send(removelikeBody).expect(200);
     expect(reviewMethods.removeLikeFromReview).toBeCalled();
   });
-  it('adds nothing and removes like', async () => {
+  test('adds nothing and removes like', async () => {
     await request(mockApp)
       .post('/add-review')
       .send(removeDislikeBody)
