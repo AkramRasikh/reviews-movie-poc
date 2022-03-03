@@ -17,6 +17,8 @@ const createReview = async ({ reviewId, dislikes, likes }) => {
     TableName: 'reviews',
   };
 
+  console.log('pppparams: ', params);
+
   try {
     await dynamoDB.putItem(params).promise();
   } catch (error) {

@@ -29,9 +29,15 @@ const getLikeById = async (reviewId, typeOfLike, userId) => {
     },
     AttributesToGet: [typeOfLike],
   };
-  const { Item: items } = await dynamoDB.getItem(params).promise();
-  const likeItemsIndex = items[typeOfLike].L.findIndex((e) => e.S === userId);
-  return likeItemsIndex;
+  const res = await dynamoDB.getItem(params).promise();
+  if (res?.Item) {
+    const likeItemsIndex = res.Item[typeOfLike]?.L?.findIndex(
+      (e) => e.S === userId
+    );
+    return likeItemsIndex;
+  }
+  console.log('just here (res)::?: ');
+  return false;
 };
 
 const constructLikeParams = (reviewId, userId, statement, typeOfLike) => {
@@ -51,107 +57,87 @@ const constructLikeParams = (reviewId, userId, statement, typeOfLike) => {
     },
     ReturnValues: 'UPDATED_NEW',
   };
+  return params;
+};
+
+const constructRemoveLikeParams = (reviewId, prevLike, index) => {
+  const params = {
+    TableName: 'reviews',
+    Key: {
+      reviewId: reviewId,
+    },
+    UpdateExpression: `remove ${prevLike}s[${index}]`,
+    ReturnValues: 'UPDATED_NEW',
+  };
+  return params;
+};
+
+const constructInitParam = (reviewId, userId, typeOfLike) => {
+  const setProperty = (likeProperty) => {
+    if (typeOfLike === likeProperty) {
+      return [{ S: userId }];
+    }
+    return [];
+  };
+
+  const params = {
+    Item: {
+      reviewId: {
+        S: reviewId,
+      },
+      dislikes: { L: setProperty('dislike') },
+      likes: { L: setProperty('like') },
+    },
+    ReturnConsumedCapacity: 'TOTAL',
+    TableName: 'reviews',
+  };
+  console.log('params: ,', params);
 
   return params;
 };
 
-const addLikeToReview = async (reviewObj) => {
-  console.log('function init addLikeToReview: ', reviewObj);
-  let removeStatement;
-  if (reviewObj.prevLike === 'dislike') {
-    const dislikeIndex = await getLikeById(
-      reviewObj.reviewId,
-      'dislikes',
-      reviewObj.userId
-    );
-    removeStatement = ` remove dislikes[${dislikeIndex}]`;
-  }
-  const params = constructLikeParams(
-    reviewObj.reviewId,
-    reviewObj.userId,
-    removeStatement,
-    'like'
-  );
+const handleLike = async (reviewObj) => {
+  const { currentLike, prevLike, reviewId, userId } = reviewObj;
+  const likeIndex = await getLikeById(reviewId, `${prevLike}s`, userId);
 
-  return await dynamoClient.update(params).promise();
-};
-
-const addDislikeToReview = async (reviewObj) => {
-  let removeLikeStatement;
-  if (reviewObj.prevLike === 'like') {
-    const likeIndex = await getLikeById(
-      reviewObj.reviewId,
-      'likes',
-      reviewObj.userId
-    );
-    removeLikeStatement = ` remove likes[${likeIndex}]`;
+  if (!likeIndex) {
+    const initParams = constructInitParam(reviewId, userId, currentLike);
+    return await dynamoDB.putItem(initParams).promise();
   }
+  const removeLikeStatement = ` remove ${prevLike}s[${likeIndex}]`;
   const params = constructLikeParams(
-    reviewObj.reviewId,
-    reviewObj.userId,
+    reviewId,
+    userId,
     removeLikeStatement,
-    'dislike'
+    `${currentLike}`
   );
   return await dynamoClient.update(params).promise();
 };
 
-const removeLikeFromReview = async (reviewObj) => {
-  const likeIndex = await getLikeById(
+const handleRemoveLike = async (reviewObj) => {
+  const index = await getLikeById(
     reviewObj.reviewId,
-    'likes',
+    `${reviewObj.prevLike}s`,
     reviewObj.userId
   );
-  console.log('likeIndex: ', likeIndex);
-  const params = {
-    TableName: 'reviews',
-    Key: {
-      reviewId: reviewObj.reviewId,
-    },
-    UpdateExpression: `remove likes[${likeIndex}]`,
-    ReturnValues: 'UPDATED_NEW',
-  };
-  return await dynamoClient.update(params).promise();
-};
-
-const removeDislikeFromReview = async (reviewObj) => {
-  const dislikeIndex = await getLikeById(
+  const params = constructRemoveLikeParams(
     reviewObj.reviewId,
-    'dislikes',
-    reviewObj.userId
+    reviewObj.prevLike,
+    index
   );
-  const params = {
-    TableName: 'reviews',
-    Key: {
-      reviewId: reviewObj.reviewId,
-    },
-    UpdateExpression: `remove dislikes[${dislikeIndex}]`,
-    ReturnValues: 'UPDATED_NEW',
-  };
   return await dynamoClient.update(params).promise();
 };
 
 const likeToReview = async (reviewReq) => {
-  if (reviewReq.currentLike === 'like') {
-    console.log('#1: ');
-    await addLikeToReview(reviewReq);
-  } else if (reviewReq.currentLike === 'dislike') {
-    console.log('#2');
-    await addDislikeToReview(reviewReq);
-  } else if (reviewReq.prevLike === 'dislike') {
-    console.log('#3');
-    await removeDislikeFromReview(reviewReq);
+  if (reviewReq.currentLike) {
+    await handleLike(reviewReq);
   } else {
-    console.log('#4');
-    await removeLikeFromReview(reviewReq);
+    await handleRemoveLike(reviewReq);
   }
 };
 
 module.exports = {
   getReviews,
   addReview,
-  addLikeToReview,
-  addDislikeToReview,
-  removeLikeFromReview,
-  removeDislikeFromReview,
   likeToReview,
 };

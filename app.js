@@ -2,14 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const {
-  getReviews,
-  addLikeToReview,
-  addDislikeToReview,
-  removeLikeFromReview,
-  removeDislikeFromReview,
-  likeToReview,
-} = require('./reviews-aws-methods');
+const { getReviews, likeToReview } = require('./reviews-aws-methods');
 
 app.use(bodyParser.json());
 
@@ -30,7 +23,6 @@ app.post('/add-review', async function (req, res) {
     await likeToReview(reviewReq);
     res.status(200).send('review sent');
   } catch (error) {
-    console.log('fail');
     res.status(400).send('failed to send review');
   }
 });
