@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon app.js",
     "create-table": "node aws/create-table.js",
+    "generate-table": "node aws/generate-table.js",
     "create-integration-db": "node setup-integration.js",
+    "dynamo-local-gui": "AWS_REGION=local AWS_ACCESS_KEY_ID=x AWS_SECRET_ACCESS_KEY=x dynamodb-admin",
     "put-item": "node aws/put-item.js",
     "test": "jest --config=jest.config.js --detectOpenHandles",
     "test:i": "jest --config=jest.integration.config.js --forceExit --detectOpenHandles",
