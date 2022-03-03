@@ -6,12 +6,6 @@ const { dynamoDB } = require('../../aws/dynamo');
 
 beforeAll(async () => {
   await createTables();
-  // review isn't init(ed)
-  // await createReview({
-  //   reviewId: '1',
-  //   likes: [{ S: 'user1' }],
-  //   dislikes: [],
-  // });
 });
 
 afterAll(async () => {
@@ -39,7 +33,6 @@ test('should remove a like from reviews and add to dislikes', async () => {
     },
   };
   const { Item: items } = await dynamoDB.getItem(params).promise();
-  console.log('items (test): ', items);
   expect(items.dislikes.L.length).toBe(0);
   expect(items.likes.L.length).toBe(1);
 });

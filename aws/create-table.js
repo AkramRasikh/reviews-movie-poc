@@ -11,6 +11,7 @@ const createTableParams = {
 
 const createTables = async () => {
   try {
+    console.log('dynamoDB: ', dynamoDB);
     await dynamoDB.createTable(createTableParams).promise();
   } catch (error) {
     console.log('err creating table');
