@@ -84,8 +84,7 @@ const constructInitParam = (reviewId, userId, typeOfLike) => {
   return params;
 };
 
-const handleLike = async (reviewObj) => {
-  const { currentLike, prevLike, reviewId, userId } = reviewObj;
+const handleLike = async ({ currentLike, prevLike, reviewId, userId }) => {
   const likeIndex = await getLikeById(reviewId, `${prevLike}s`, userId);
 
   if (!likeIndex) {
@@ -102,17 +101,9 @@ const handleLike = async (reviewObj) => {
   return await dynamoClient.update(params).promise();
 };
 
-const handleRemoveLike = async (reviewObj) => {
-  const index = await getLikeById(
-    reviewObj.reviewId,
-    `${reviewObj.prevLike}s`,
-    reviewObj.userId
-  );
-  const params = constructRemoveLikeParams(
-    reviewObj.reviewId,
-    reviewObj.prevLike,
-    index
-  );
+const handleRemoveLike = async ({ reviewId, prevLike, userId }) => {
+  const index = await getLikeById(reviewId, `${prevLike}s`, userId);
+  const params = constructRemoveLikeParams(reviewId, prevLike, index);
   return await dynamoClient.update(params).promise();
 };
 
